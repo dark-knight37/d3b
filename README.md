@@ -1,2 +1,2 @@
-# d3b
+# D3B
 Depressive Disorder Data Base
