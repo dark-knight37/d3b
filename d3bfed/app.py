@@ -1,7 +1,6 @@
-import pymongo
-from flask import Flask
+from flask import Flask, request
 
-from ..dataManager import DataManager
+from d3b.dataManager.dataManager import *
 
 app = Flask(__name__)
 
@@ -12,4 +11,10 @@ DataManager().init_client(client)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "<p>D3B Federate</p>"
+
+
+@app.route("/insert_patient_data", methods=['POST'])
+def insert_patient_data():
+    if request.method == 'POST':
+        print(request.form)

@@ -1,1 +1,245 @@
-[{"patientIdentifier": "P1", "age": "37", "gender": "Female", "disease": "False", "handwrittenList": ["P1_hw_a.svc", "P1_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P1_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P1_tale.wav"}, {"kind":"tale","nature":"video","fname":"P1_video.mp4"}], "eegList": ["P1_eeg.edf"]}, {"patientIdentifier": "P2", "age": "29", "gender": "Female", "disease": "False", "handwrittenList": ["P2_hw_a.svc", "P2_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P2_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P2_tale.wav"}, {"kind":"tale","nature":"video","fname":"P2_video.mp4"}], "eegList": ["P2_eeg.edf"]}, {"patientIdentifier": "P3", "age": "26", "gender": "Male", "disease": "False", "handwrittenList": ["P3_hw_a.svc", "P3_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P3_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P3_tale.wav"}, {"kind":"tale","nature":"video","fname":"P3_video.mp4"}], "eegList": ["P3_eeg_a.edf","P3_eeg_b.edf"]}, {"patientIdentifier": "P4", "age": "39", "gender": "Male", "disease": "False", "handwrittenList": ["P4_hw_a.svc", "P4_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P4_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P4_tale.wav"}, {"kind":"tale","nature":"video","fname":"P4_video.mp4"}], "eegList": ["P4_eeg.edf"]}, {"patientIdentifier": "P5", "age": "34", "gender": "Male", "disease": "True", "handwrittenList": ["P5_hw_a.svc", "P5_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P5_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P5_tale.wav"}, {"kind":"tale","nature":"video","fname":"P5_video.mp4"}], "eegList": ["P5_eeg_a.edf","P5_eeg_b.edf"]}, {"patientIdentifier": "P6", "age": "23", "gender": "Female", "disease": "True", "handwrittenList": ["P6_hw_a.svc", "P6_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P6_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P6_tale.wav"}, {"kind":"tale","nature":"video","fname":"P6_video.mp4"}], "eegList": ["P6_eeg.edf"]}, {"patientIdentifier": "P7", "age": "57", "gender": "Female", "disease": "True", "handwrittenList": ["P7_hw_a.svc", "P7_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P7_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P7_tale.wav"}, {"kind":"tale","nature":"video","fname":"P7_video.mp4"}], "eegList": ["P7_eeg.edf"]}, {"patientIdentifier": "P8", "age": "45", "gender": "Male", "disease": "True", "handwrittenList": ["P8_hw_a.svc", "P8_hw_b.svc"], "speechList": [{"kind":"diary","nature":"audio","fname":"P8_diary.wav"}, {"kind":"tale","nature":"audio","fname":"P8_tale.wav"}, {"kind":"tale","nature":"video","fname":"P8_video.mp4"}], "eegList": ["P8_eeg_a.edf","P8_eeg_b.edf"]}]
+[
+  {
+    "patientIdentifier": "P1",
+    "age": "37",
+    "gender": "Female",
+    "disease": "False",
+    "handwrittenList": [
+      "P1_hw_a.svc",
+      "P1_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P1_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P1_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P1_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P1_eeg.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P2",
+    "age": "29",
+    "gender": "Female",
+    "disease": "False",
+    "handwrittenList": [
+      "P2_hw_a.svc",
+      "P2_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P2_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P2_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P2_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P2_eeg.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P3",
+    "age": "26",
+    "gender": "Male",
+    "disease": "False",
+    "handwrittenList": [
+      "P3_hw_a.svc",
+      "P3_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P3_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P3_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P3_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P3_eeg_a.edf",
+      "P3_eeg_b.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P4",
+    "age": "39",
+    "gender": "Male",
+    "disease": "False",
+    "handwrittenList": [
+      "P4_hw_a.svc",
+      "P4_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P4_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P4_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P4_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P4_eeg.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P5",
+    "age": "34",
+    "gender": "Male",
+    "disease": "True",
+    "handwrittenList": [
+      "P5_hw_a.svc",
+      "P5_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P5_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P5_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P5_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P5_eeg_a.edf",
+      "P5_eeg_b.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P6",
+    "age": "23",
+    "gender": "Female",
+    "disease": "True",
+    "handwrittenList": [
+      "P6_hw_a.svc",
+      "P6_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P6_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P6_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P6_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P6_eeg.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P7",
+    "age": "57",
+    "gender": "Female",
+    "disease": "True",
+    "handwrittenList": [
+      "P7_hw_a.svc",
+      "P7_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P7_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P7_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P7_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P7_eeg.edf"
+    ]
+  },
+  {
+    "patientIdentifier": "P8",
+    "age": "45",
+    "gender": "Male",
+    "disease": "True",
+    "handwrittenList": [
+      "P8_hw_a.svc",
+      "P8_hw_b.svc"
+    ],
+    "speechList": [
+      {
+        "kind": "diary",
+        "nature": "audio",
+        "fname": "P8_diary.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "audio",
+        "fname": "P8_tale.wav"
+      },
+      {
+        "kind": "tale",
+        "nature": "video",
+        "fname": "P8_video.mp4"
+      }
+    ],
+    "eegList": [
+      "P8_eeg_a.edf",
+      "P8_eeg_b.edf"
+    ]
+  }
+]
