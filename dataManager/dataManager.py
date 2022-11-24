@@ -3,7 +3,7 @@ from typing import TypedDict
 
 from bson.objectid import ObjectId
 
-from d3b.dataManager.caricaFile import *
+from dataManager.caricaFile import *
 
 """
 Libreria Per Operazioni su db - Implementazione Singleton
@@ -79,6 +79,7 @@ class DataManagerBase:
     def insert_patient_data(self, data):
         payloadConst = 'payload'
         patientIdentifierConst = 'patientIdentifier'
+        patientInfoConst = 'patient'
         requestTypeConst = 'request_type'
         collection = self.db.patient
         pids = []
@@ -86,20 +87,21 @@ class DataManagerBase:
             # controllo se l'id già esiste
             payload = obj[payloadConst]
             # se non c'è il campo patientIdentifier nel record esco
-            if patientIdentifierConst not in payload:
+            patient = payload['patient']
+            if patientIdentifierConst not in patient:
                 return False
             # se il paziente non esiste lo inserisco
-            res = collection.find_one({patientIdentifierConst: payload[patientIdentifierConst]})
+            res = collection.find_one({patientIdentifierConst: patient[patientIdentifierConst]})
             if not res:
-                collection.insert_one(obj[payloadConst])
+                collection.insert_one(patient)
 
             if obj[requestTypeConst] == RequestType.FULL:
                 row = payload
-                pid = row[patientIdentifierConst]
+                pid = row[patientInfoConst][patientIdentifierConst]
                 pids.append(pid)
-                insertHandwriting(self.fs, collection, self.db, row, payload)
-                insertEEG(self.fs, collection, self.db, row, payload)
-                insertSpeech(self.fs, collection, self.db, row, payload)
+                insertHandwriting(self.fs, collection, self.db, row)
+                insertEEG(self.fs, collection, self.db, row)
+                insertSpeech(self.fs, collection, self.db, row)
             elif obj[requestTypeConst] == RequestType.PLAIN:
                 # insertPlainFiles(fs,)
                 pass

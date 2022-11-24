@@ -1,6 +1,6 @@
 import unittest
 
-from d3b.dataManager.dataManager import *
+from dataManager.dataManager import *
 
 
 class MyTestCase(unittest.TestCase):
@@ -12,18 +12,23 @@ class MyTestCase(unittest.TestCase):
             {
                 'request_type': RequestType.FULL,
                 'payload': {
-                    "patientIdentifier": "P13",
-                    "age": "28",
-                    "gender": "Male",
-                    "disease": True,
-                    "handwrittenList": [
-                    ],
-                    "speechList": [
+                    'patient': {
+                        "patientIdentifier": "P13",
+                        "age": "28",
+                        "gender": "Male",
+                        "disease": True,
+                        "handwrittenList": [
+                            'hw1'
+                        ],
+                        "speechList": [
 
-                    ],
-                    "eegList": [
-                    ]
+                        ],
+                        "eegList": [
+                        ],
+                    },
+                    'data': {'hw1': 'cHJvdmEgMQ=='}
                 },
+
             }
         ]
         pids = DataManager().insert_patient_data(patient_data)

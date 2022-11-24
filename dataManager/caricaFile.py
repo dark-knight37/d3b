@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import base64
 import json
 
 import gridfs
@@ -17,25 +18,28 @@ def insertPlainFiles(filesystem, column, database, patientID, filelist, tag, fil
             pass
 
         data = payload[fname]
-        item = filesystem.put(data, patient_id=patientID, filename=fname, kind=filekind)
+        base64_bytes = data.encode('ascii')
+        message_bytes = base64.b64decode(base64_bytes)
+        message = message_bytes.decode('ascii')
+        item = filesystem.put(message, patient_id=patientID, filename=fname, kind=filekind, encoding='utf-8')
         column.update_many({"patientIdentifier": patientID}, {"$set": {tag: filelist}})
-        res = column.find({"patientIdentifier": patientID})
-        for result in res:
-            P_id = result["_id"]
-            database.fs.files.update_many({"patient_id": patientID}, {"$set": {"patient_id": P_id}})
+        #res = column.find({"patientIdentifier": patientID})
+        #for result in res:
+        #    P_id = result["_id"]
+        #    database.fs.files.update_many({"patient_id": patientID}, {"$set": {"patient_id": P_id}})
 
 
-def insertSpeech(filesystem, column, database, row, payload):
-    patientID = row['patientIdentifier']
-    for entry in row['speechList']:
+def insertSpeech(filesystem, column, database, row):
+    patientID = row['patient']['patientIdentifier']
+    for entry in row['patient']['speechList']:
         kkind = entry["kind"]
         nnature = entry["nature"]
         fname = entry["fname"]
         # fhandle = open(fname, 'rb')
         # data = fhandle.read()
-        if entry not in payload:
+        if entry not in row['data']:
             pass
-        data = payload[fname]
+        data = row['data'][fname]
         item = filesystem.put(data, patient_id=patientID, filename=fname, nature=nnature, kind=kkind)
         column.update_many({"patientIdentifier": patientID}, {"$set": {"speechList": row['speechList']}})
         res = column.find({"patientIdentifier": patientID})
@@ -44,16 +48,16 @@ def insertSpeech(filesystem, column, database, row, payload):
             database.fs.files.update_many({"patient_id": patientID}, {"$set": {"patient_id": P_id}})
 
 
-def insertHandwriting(filesystem, column, database, row, payload):
-    pid = row['patientIdentifier']
-    hwlist = row['handwrittenList']
-    insertPlainFiles(filesystem, column, database, pid, hwlist, "handwrittenList", "handwriting", payload)
+def insertHandwriting(filesystem, column, database, row):
+    pid = row['patient']['patientIdentifier']
+    hwlist = row['patient']['handwrittenList']
+    insertPlainFiles(filesystem, column, database, pid, hwlist, "handwrittenList", "handwriting", row['data'])
 
 
-def insertEEG(filesystem, column, database, row, payload):
-    pid = row['patientIdentifier']
-    eeglist = row['eegList']
-    insertPlainFiles(filesystem, column, database, pid, eeglist, "eegList", "eeg", payload)
+def insertEEG(filesystem, column, database, row):
+    pid = row['patient']['patientIdentifier']
+    eeglist = row['patient']['eegList']
+    insertPlainFiles(filesystem, column, database, pid, eeglist, "eegList", "eeg", row['data'])
 
 
 if __name__ == '__main__':
