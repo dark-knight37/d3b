@@ -67,7 +67,7 @@ if __name__ == '__main__':
     db.fs.files.drop()
     db.fs.chunks.drop()
     col = db.patient
-    file_json = open('../data.json', 'r')
+    file_json = open('../../data.json', 'r')
     data_from_json = json.loads(file_json.read())
     fs = gridfs.GridFS(db)
     for row in data_from_json:

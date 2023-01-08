@@ -1,6 +1,8 @@
 import unittest
 
-from dataManager.dataManager import *
+import pymongo as pymongo
+
+from d3bfed.dataManager.dataManager import DataManager, RequestType
 
 
 class MyTestCase(unittest.TestCase):
