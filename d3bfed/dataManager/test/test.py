@@ -8,7 +8,7 @@ from d3bfed.dataManager.dataManager import DataManager, RequestType
 class MyTestCase(unittest.TestCase):
     def test_write_data(self):
         # connessione con MongoDB
-        client = pymongo.MongoClient('mongodb://127.0.0.1:27017/')
+        client = pymongo.MongoClient('mongodb://root:example@127.0.0.1:27018/')
         DataManager().init_client(client)
         patient_data = [
             {

@@ -96,14 +96,15 @@ class DataManagerBase:
             res = collection.find_one({patient_identifier_const: patient[patient_identifier_const]})
             if not res:
                 collection.insert_one(patient)
+            # if obj[request_type_const] == RequestType.FULL.name:
+            row = payload
+            pid = row[patient_info_const][patient_identifier_const]
+            pids.append(pid)
+            insertHandwriting(self.fs, collection, self.db, row)
+            insertEEG(self.fs, collection, self.db, row)
+            insertSpeech(self.fs, collection, self.db, row)
 
-            if obj[request_type_const] == RequestType.FULL.name:
-                row = payload
-                pid = row[patient_info_const][patient_identifier_const]
-                pids.append(pid)
-                insertHandwriting(self.fs, collection, self.db, row)
-                insertEEG(self.fs, collection, self.db, row)
-                insertSpeech(self.fs, collection, self.db, row)
+            """
             elif obj[request_type_const] == RequestType.PLAIN.name:
                 # insertPlainFiles(fs,)
                 pass
@@ -114,6 +115,7 @@ class DataManagerBase:
                 pass
             elif obj[request_type_const] == RequestType.EEG:
                 pass
+                """
         return pids
 
 
