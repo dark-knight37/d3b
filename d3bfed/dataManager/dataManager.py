@@ -131,20 +131,22 @@ class DataManagerBase:
             return query[0]
         return None
 
+    """
+       read_patient_data_by_query viene utilizzato per infiare i file relativi ai pazienti (handwriting, speech, eeg)
+       se i criteri inseriti in query sono rispettati.
+       Ad es.
+       query = {
+            "disease": True, 
+            "gender": "Male"
+       }
+       type = "HANDWRITING"
+       Se viene trovato almeno un paziente che rispetta i criteri della query
+       viene restituito un file out.zip composto da
+       - info.json, contenente gli id dei pazienti e i nomi dei files,
+       - lista dei file di tipo type
+    """
+
     def read_patient_data_by_query(self, query, type: D3BDataType, kind=None, nature=None):
-        """
-        query = db.patient.find({"disease":"False", "gender":"Male"})
-        for result in list(query):
-          p_id = result["_id"]
-          q = db.fs.files.find({"patient_id":p_id, "kind":"diary", "nature":"audio"})
-          for x in q:
-            name = x["filename"]
-            outputdata = fs.get_last_version(name).read()
-            output = open('out_' + name, "wb")
-            output.write(outputdata)
-            output.close()
-        print('Download completato!')
-        """
         res = self.db.patient.find(query)
         local_filenames = []
         patient_filename_map = {
