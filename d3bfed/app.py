@@ -2,8 +2,8 @@ import os
 from os.path import dirname, join
 
 import pymongo
-from flask import Flask, request
 from dotenv import load_dotenv
+from flask import Flask, request, send_file
 
 from d3bfed.dataManager.dataManager import DataManager
 
@@ -35,6 +35,34 @@ def insert_patient_data():
         try:
             pids = DataManager().insert_patient_data(data)
             s = f"Success, insert {' '.join(pids)}"
+            c = 200
+        except Exception as e:
+            print(str(e))
+            s = 'Erorr'
+            c = 500
+    return s, c
+
+
+@app.route('/get_patient_data', methods=["POST"])
+def get_patient_data():
+    s = 'Error'
+    c = 500
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        data = request.json
+        print(data, type(data))
+        if 'query' not in data or 'type' not in data:
+            s = 'Invalid request'
+            c = 400
+            return s, c
+        try:
+            zip_filename = DataManager().read_patient_data_by_query(data['query'], data['type'],
+                                                                    kind=data['kind'] if 'kind' in data else None,
+                                                                    nature=data['nature'] if 'nature' in data else None)
+
+            if zip_filename:
+                return send_file(zip_filename, as_attachment=True)
+            s = f"No patient meets the criteria"
             c = 200
         except Exception as e:
             print(str(e))

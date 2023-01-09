@@ -1,3 +1,5 @@
+import json
+import zipfile
 from enum import Enum
 from typing import TypedDict
 
@@ -144,17 +146,40 @@ class DataManagerBase:
         print('Download completato!')
         """
         res = self.db.patient.find(query)
-        print(res[0])
+        local_filenames = []
+        patient_filename_map = {
+            'query': query
+        }
         for val in res:
             p_id = val[self.patient_identifier_const]
-            q = self.db.fs.find({
-                self.patient_identifier_const: p_id,
-                'type': type.name,
+            q = self.db.fs.files.find({
+                'patient_id': p_id,
+                'type': type,
                 'kind': kind,
                 'nature': nature
             })
             for x in q:
-                print(x)
+                if p_id not in patient_filename_map:
+                    patient_filename_map[p_id] = {}
+                    patient_filename_map[p_id]['filename'] = []
+                name = x['filename']
+                patient_filename_map[p_id]['filename'].append(name)
+
+                outputdata = self.fs.get_last_version(name).read()
+                print(outputdata)
+                output = open(name, "wb")
+                output.write(outputdata)
+                output.close()
+                local_filenames.append(name)
+        if local_filenames:
+            with open('info.json', 'w') as infofile:
+                json.dump(patient_filename_map, infofile)
+            local_filenames.append('info.json')
+            with zipfile.ZipFile('out.zip', 'w') as zipMe:
+                for file in local_filenames:
+                    zipMe.write(file, compress_type=zipfile.ZIP_DEFLATED)
+            return 'out.zip'
+        return None
 
 
 class Singleton(type):

@@ -60,7 +60,7 @@ class MyTestCase(unittest.TestCase):
     def test_read_patient_data_by_query(self):
         client = pymongo.MongoClient('mongodb://root:example@127.0.0.1:27018/')
         DataManager().init_client(client)
-        query = {"disease": False, "gender": "Male"}
+        query = {"disease": True, "gender": "Male"}
         type = D3BDataType.HANDWRITING.name
         # print(type)
         DataManager().read_patient_data_by_query(query, type, kind=None, nature=None)
