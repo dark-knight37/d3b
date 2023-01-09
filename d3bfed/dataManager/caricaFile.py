@@ -7,57 +7,86 @@ import gridfs
 import pymongo
 
 
-def insertPlainFiles(filesystem, column, database, patientID, filelist, tag, filekind, payload):
-    for fname in filelist:
-        # fhandle = open(fname, 'rb')
-        # data = fhandle.read()
+def get_file_infos(entry):
+    data = entry['data']
+    kkind = entry["kind"]
+    nnature = entry["nature"] if "nature" in entry["nature"] else None
+    fname = entry["fname"]
+    fformat = fname.split('.')
+    fformat = fformat[1] if len(fformat) > 1 else None
+    return {
+        'filename': fname,
+        'type': 'speechlist',
+        'nature': nnature,
+        'data': data,
+        'format': fformat,
+        'kind': kkind
+    }
 
-        # il dato è caricato direttamente nel payload
+
+def insertPlainFiles(filesystem, column, patientID, filelist, tag, filetype, payload):
+    for fname in filelist:
+        # il dato è caricato direttamente nel payload in formato base64
 
         if fname not in payload:
             pass
 
         data = payload[fname]
-        base64_bytes = data.encode('ascii')
-        message_bytes = base64.b64decode(base64_bytes)
-        message = message_bytes.decode('ascii')
-        item = filesystem.put(message, patient_id=patientID, filename=fname, kind=filekind, encoding='utf-8')
+        fformat = fname.split('.')
+        fformat = fformat[1] if len(fformat) > 1 else None
+
+        file_infos = {
+            'filename': fname,
+            'type': filetype,
+            'data': data,
+            'format': fformat,
+            'kind': None,
+            'nature': None
+        }
+
+        message = base64.b64decode(file_infos['data'])
+
+        item = filesystem.put(message,
+                              patient_id=patientID,
+                              filename=file_infos['filename'],
+                              type=file_infos['type'],
+                              kind=file_infos['kind'],
+                              format=file_infos['format'],
+                              nature=file_infos['nature'],
+                              encoding='utf-8')
         column.update_many({"patientIdentifier": patientID}, {"$set": {tag: filelist}})
-        #res = column.find({"patientIdentifier": patientID})
-        #for result in res:
-        #    P_id = result["_id"]
-        #    database.fs.files.update_many({"patient_id": patientID}, {"$set": {"patient_id": P_id}})
 
 
-def insertSpeech(filesystem, column, database, row):
+def insertSpeech(filesystem, column, row, type):
     patientID = row['patient']['patientIdentifier']
     for entry in row['patient']['speechList']:
-        kkind = entry["kind"]
-        nnature = entry["nature"]
-        fname = entry["fname"]
-        # fhandle = open(fname, 'rb')
-        # data = fhandle.read()
-        if entry not in row['data']:
+
+        file_infos = get_file_infos(entry=entry)
+
+        if file_infos['filename'] not in row['data']:
             pass
-        data = row['data'][fname]
-        item = filesystem.put(data, patient_id=patientID, filename=fname, nature=nnature, kind=kkind)
+        data = row['data'][file_infos['filename']]
+        item = filesystem.put(data,
+                              patient_id=patientID,
+                              filename=file_infos['filename'],
+                              type=type,
+                              kind=file_infos['kind'],
+                              format=file_infos['format'],
+                              nature=file_infos['nature'],
+                              encoding=None)
         column.update_many({"patientIdentifier": patientID}, {"$set": {"speechList": row['speechList']}})
-        res = column.find({"patientIdentifier": patientID})
-        for result in res:
-            P_id = result["_id"]
-            database.fs.files.update_many({"patient_id": patientID}, {"$set": {"patient_id": P_id}})
 
 
-def insertHandwriting(filesystem, column, database, row):
+def insertHandwriting(filesystem, column, row, type):
     pid = row['patient']['patientIdentifier']
     hwlist = row['patient']['handwrittenList']
-    insertPlainFiles(filesystem, column, database, pid, hwlist, "handwrittenList", "handwriting", row['data'])
+    insertPlainFiles(filesystem, column, pid, hwlist, "handwrittenList", type, row['data'])
 
 
-def insertEEG(filesystem, column, database, row):
+def insertEEG(filesystem, column, row, type):
     pid = row['patient']['patientIdentifier']
     eeglist = row['patient']['eegList']
-    insertPlainFiles(filesystem, column, database, pid, eeglist, "eegList", "eeg", row['data'])
+    insertPlainFiles(filesystem, column, pid, eeglist, "eegList", type, row['data'])
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ import pymongo
 from flask import Flask, request
 from dotenv import load_dotenv
 
-from d3bfed.dataManager.dataManager import DataManager, RequestType
+from d3bfed.dataManager.dataManager import DataManager
 
 app = Flask(__name__)
 

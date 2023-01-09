@@ -15,12 +15,11 @@ Michele Di Giovanni
 """
 
 
-class RequestType(Enum):
-    FULL = 0
-    PLAIN = 1
+class D3BDataType(Enum):
+    PLAIN = 0
+    HANDWRITING = 1
     SPEECH = 2
-    HANDWRITING = 3
-    EEG = 4
+    EEG = 3
 
 
 class D3BSpeechData(TypedDict):
@@ -45,6 +44,9 @@ class DataManagerBase:
         self.client: pymongo.MongoClient = None
         self.db: pymongo.collection.Collection[D3BData] = None
         self.fs: gridfs.GridFS = None
+        self.payload_const = 'payload'
+        self.patient_identifier_const = 'patientIdentifier'
+        self.patient_info_const = 'patient'
 
     def init_client(self, client: pymongo.MongoClient):
         self.client = client
@@ -59,50 +61,51 @@ class DataManagerBase:
         il metodo si aspetta un dato così strutturato:
         data = [
             {
-                'request_type': 'FULL'/'PLAIN'/'SPEECH'/'HANDWRITING'/'EEG'
-                'payload': ..
-            }
+                'payload': {
+                    'patient': {
+                        "patientIdentifier":..,
+                        "age": ..,
+                        "gender":..,
+                        "disease": ..,
+                        "handwrittenList": [
+                            "hw1",
+                            ...
+                        ],
+                        "speechList": [
+                            ..
+                        ],
+                        "eegList": [
+                            ..
+                        ],
+                    },
+                    'data': {'hw1': 'cHJvdmEgMQ=='}            }
         ]
-        request_type: 
-            - FULL, si inserisce il paziente con tutte le informazioni relative
-            - PLAIN, si inserisce solo un plain file relativo ad un paziente
-            - SPEECH, si inserisce solo un file speech relativo ad un paziente
-            ....
         payload:
-            A seconda della request type il payload può variare.
-            Nel caso FULL (fin ora implementato) il payload è composto da una lista di pazienti con i loro dati 
-            anagrafici e la lista dei file da caricare (gia presenti sul fs) per ogni paziente
-        N.B. la variabile data deve essere creata a partire da un json nel seguente modo:
-        data = json.loads(json_data)
-        in questo modo converto il file json in un dizionario python
-
+            Il payload è composto da una lista di pazienti con i loro dati anagrafici e la lista dei file da caricare 
+            (codificati in base 8) per ogni paziente
     """
 
     def insert_patient_data(self, data):
-        payloa_const = 'payload'
-        patient_identifier_const = 'patientIdentifier'
-        patient_info_const = 'patient'
-        request_type_const = 'request_type'
         collection = self.db.patient
         pids = []
         for obj in data:
             # controllo se l'id già esiste
-            payload = obj[payloa_const]
+            payload = obj[self.payload_const]
             # se non c'è il campo patientIdentifier nel record esco
             patient = payload['patient']
-            if patient_identifier_const not in patient:
+            if self.patient_identifier_const not in patient:
                 return False
             # se il paziente non esiste lo inserisco
-            res = collection.find_one({patient_identifier_const: patient[patient_identifier_const]})
+            res = collection.find_one({self.patient_identifier_const: patient[self.patient_identifier_const]})
             if not res:
                 collection.insert_one(patient)
             # if obj[request_type_const] == RequestType.FULL.name:
             row = payload
-            pid = row[patient_info_const][patient_identifier_const]
+            pid = row[self.patient_info_const][self.patient_identifier_const]
             pids.append(pid)
-            insertHandwriting(self.fs, collection, self.db, row)
-            insertEEG(self.fs, collection, self.db, row)
-            insertSpeech(self.fs, collection, self.db, row)
+            insertHandwriting(self.fs, collection, row, D3BDataType.HANDWRITING.name)
+            insertEEG(self.fs, collection, row, D3BDataType.EEG.name)
+            insertSpeech(self.fs, collection, row, D3BDataType.SPEECH.name)
 
             """
             elif obj[request_type_const] == RequestType.PLAIN.name:
@@ -117,6 +120,41 @@ class DataManagerBase:
                 pass
                 """
         return pids
+
+    def read_patient_data_by_id(self, patientId):
+        query = self.db.patient.find({
+            self.patient_identifier_const: patientId
+        })
+        if query:
+            return query[0]
+        return None
+
+    def read_patient_data_by_query(self, query, type: D3BDataType, kind=None, nature=None):
+        """
+        query = db.patient.find({"disease":"False", "gender":"Male"})
+        for result in list(query):
+          p_id = result["_id"]
+          q = db.fs.files.find({"patient_id":p_id, "kind":"diary", "nature":"audio"})
+          for x in q:
+            name = x["filename"]
+            outputdata = fs.get_last_version(name).read()
+            output = open('out_' + name, "wb")
+            output.write(outputdata)
+            output.close()
+        print('Download completato!')
+        """
+        res = self.db.patient.find(query)
+        print(res[0])
+        for val in res:
+            p_id = val[self.patient_identifier_const]
+            q = self.db.fs.find({
+                self.patient_identifier_const: p_id,
+                'type': type.name,
+                'kind': kind,
+                'nature': nature
+            })
+            for x in q:
+                print(x)
 
 
 class Singleton(type):
