@@ -30,3 +30,4 @@ services:
       - 5001:5000
     environment:
       MONGO_ULR: mongodb://root:example@mongo:27017/
+      D3BAGENT_URL: http://localhost:5002/

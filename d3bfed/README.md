@@ -6,6 +6,8 @@ It is recommended to build and run a docker image with the following commands.
 ## build and run
 To build
 ```
+docker build -t d3bfed:latest .
+
 docker-compose build
 ```
 To run

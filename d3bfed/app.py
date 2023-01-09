@@ -19,6 +19,8 @@ client = pymongo.MongoClient(MONGO_ULR)
 DataManager().init_client(client)
 
 
+# TODO: implementare registrazione servizio a D3BAgent
+
 @app.route("/")
 def hello_world():
     return "<p>D3B Federate</p>"
