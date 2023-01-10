@@ -30,4 +30,5 @@ services:
       - 5001:5000
     environment:
       MONGO_ULR: mongodb://root:example@mongo:27017/
-      D3BAGENT_URL: http://localhost:5002/
+      D3BAGENT_URL: http://10.1.13.171:5002/
+      D3BFED_NAME: FedX

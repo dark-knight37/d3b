@@ -2,17 +2,31 @@ import os
 from os.path import dirname, join
 
 import pymongo
+import requests
 from dotenv import load_dotenv
 from flask import Flask, request, send_file
 
 from d3bfed.dataManager.dataManager import DataManager
 
-app = Flask(__name__)
+
+def app_setup():
+    response = requests.post(f'{D3BAGENT_URL}registry', json={
+        "d3bfed_url": "http://127.0.0.1:5001/",
+        "d3bfed_name": D3BFED_NAME
+    })
+    print(response)
+
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 MONGO_ULR = os.environ.get("MONGO_ULR")
+D3BAGENT_URL = os.environ.get("D3BAGENT_URL")
+D3BFED_NAME = os.environ.get("D3BFED_NAME")
+
+app = Flask(__name__)
+
+app_setup()
 
 # connessione con MongoDB
 client = pymongo.MongoClient(MONGO_ULR)
@@ -61,11 +75,11 @@ def get_patient_data():
             zip_filename = DataManager().read_patient_data_by_query(data['query'], data['type'],
                                                                     kind=data['kind'] if 'kind' in data else None,
                                                                     nature=data['nature'] if 'nature' in data else None)
-
+            print(zip_filename)
             if zip_filename:
                 return send_file(zip_filename, as_attachment=True)
             s = f"No patient meets the criteria"
-            c = 200
+            c = 204
         except Exception as e:
             print(str(e))
             s = 'Erorr'
