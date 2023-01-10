@@ -11,7 +11,6 @@ from d3bfed.dataManager.dataManager import DataManager
 
 def app_setup():
     response = requests.post(f'{D3BAGENT_URL}registry', json={
-        "d3bfed_url": "http://127.0.0.1:5001/",
         "d3bfed_name": D3BFED_NAME
     })
     print(response)

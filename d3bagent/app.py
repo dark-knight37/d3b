@@ -33,11 +33,12 @@ def registry():
         content_type = request.headers.get('Content-Type')
         if content_type == 'application/json':
             data = request.json
-            if 'd3bfed_url' not in data or 'd3bfed_name' not in data:
+            if 'd3bfed_name' not in data:
                 s = 'Invalid request'
                 c = 400
                 return s, c
-            fed_urls[data['d3bfed_name']] = data['d3bfed_url']
+            print(request.remote_addr)
+            fed_urls[data['d3bfed_name']] = f'http://{request.remote_addr}:5001/'
             return 'Ok', 200
     return fed_urls
     # D3B fed chiede informazioni
