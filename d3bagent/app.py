@@ -1,5 +1,7 @@
+import zipfile
+
 import requests
-from flask import Flask, request
+from flask import Flask, request, send_file
 
 
 def download_url(url, query, save_path, chunk_size=128):
@@ -57,10 +59,18 @@ def distributed_search():
             c = 400
             return s, c
         try:
+            names = []
             if fed_urls:
                 for fed in fed_urls:
-                    res = download_url(f'{fed_urls[fed]}/get_patient_data', data, f'/home/{fed}_out.zip')
-            return 'Ok', 200
+                    res = download_url(f'{fed_urls[fed]}/get_patient_data', data, f'{fed}_out.zip')
+                    if res:
+                        names.append(f'{fed}_out.zip')
+                if names:
+                    with zipfile.ZipFile('all_out.zip', 'w') as zipMe:
+                        for file in names:
+                            zipMe.write(file, compress_type=zipfile.ZIP_DEFLATED)
+                return send_file('all_out.zip', as_attachment=True)
+            return 'No patient meets criteria', 204
         except Exception as e:
             print(str(e))
             s = 'Erorr'
