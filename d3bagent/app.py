@@ -59,7 +59,7 @@ def distributed_search():
         try:
             if fed_urls:
                 for fed in fed_urls:
-                    res = download_url(f'{fed_urls[fed]}/get_patient_data', data, f'{fed}_out.zip')
+                    res = download_url(f'{fed_urls[fed]}/get_patient_data', data, f'/home/{fed}_out.zip')
             return 'Ok', 200
         except Exception as e:
             print(str(e))
